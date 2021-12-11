@@ -32,7 +32,8 @@ const LoginPage = () => {
       console.log("Login end");
       navigator("/");
       setIsSubmitted(false);
-    } catch (ex) {
+    } 
+    catch (ex) {
       const serverErrors = ex as LoginError;
       Object.entries(serverErrors).forEach(([key, value]) => {
         if (Array.isArray(value)) {

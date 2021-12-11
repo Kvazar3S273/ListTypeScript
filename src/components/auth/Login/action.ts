@@ -13,6 +13,7 @@ export const loginUser = (data: ILoginModel) => {
             const {access_token} = response.data;
             localStorage.token = access_token;
             AuthUser(access_token, dispatch);
+            localStorage.setItem("user",access_token);
             
             return Promise.resolve();
         }
