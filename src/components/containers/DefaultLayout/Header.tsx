@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTypedSelector } from "../../../hooks/useTypedSelector";
+import { AuthUser } from "../../auth/Login/action";
 
 const Header = () => {
   const { isAuth, user } = useTypedSelector((redux) => redux.auth);
@@ -38,8 +39,8 @@ const Header = () => {
             <ul className="navbar-nav">
               <li className="nav-item">
                 <Link className="nav-link" to="/profile">
-                   <img src={user?.image} alt="image" className="rounded-circle" width="32" />
-                   &nbsp;&nbsp;
+                   {/* <img src={user?.image} alt="image" className="rounded-circle" width="32" />
+                   &nbsp;&nbsp; */}
                    {user?.email}
                 </Link>
               </li>

@@ -7,7 +7,13 @@ import { Provider } from 'react-redux';
 import {store} from './store';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { AuthUser } from './components/auth/Login/action';
 
+// const token=localStorage.token as string;
+// if(token)
+// {
+//   AuthUser(token,store.dispatch);
+// }
 ReactDOM.render( 
   <Provider store={store}>
     <App />

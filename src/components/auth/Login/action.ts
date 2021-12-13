@@ -9,12 +9,10 @@ export const loginUser = (data: ILoginModel) => {
     return async (dispatch: Dispatch<AuthAction>) => {
         try {
             const response = await http.post<ILoginResponse>('api/auth/login', data);
-
             const {access_token} = response.data;
-            localStorage.token = access_token;
+            //localStorage.token = access_token;
             AuthUser(access_token, dispatch);
-            localStorage.setItem("user",access_token);
-            
+            console.log(access_token);
             return Promise.resolve();
         }
         catch(error) {
