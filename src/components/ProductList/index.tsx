@@ -9,7 +9,7 @@ const ProductList: React.FC = () => {
     const { products } = useTypedSelector(state => state.prod);
     return (
         <>
-            <Navbar />
+            {/* <Navbar /> */}
             <div className="col-md-10 mx-auto">
                 <table className="table table-primary table-striped mt-3">
                     <thead className="table-secondary">

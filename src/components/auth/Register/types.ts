@@ -4,3 +4,6 @@ export interface IRegisterModel {
     password: string;
     password_confirmation: string;
   }
+
+
+  

@@ -8,7 +8,7 @@ import { validationFields } from "./validation";
 
 
 const LoginPage = () => {
-  const { loginUser } = useActions();
+  const { LoginUser } = useActions();
   const navigator = useNavigate();
 
   const refFormik = useRef<FormikProps<ILoginModel>>(null);
@@ -28,7 +28,7 @@ const LoginPage = () => {
 
     try {
       console.log("Login begin");
-      await loginUser(values);
+      await LoginUser(values);
       console.log("Login end");
       navigator("/");
       setIsSubmitted(false);

@@ -9,9 +9,20 @@ export const authReducer = (state=initialState, action: AuthAction) : AuthState 
     switch(action.type) {
         case AuthActionTypes.LOGIN_AUTH: {
             return {
-                ...state, isAuth: true, user: action.payload
+                ...state, 
+                isAuth: true, 
+                user: {...action.payload}
             };
         }
+        case AuthActionTypes.LOGOUT_AUTH: {
+            return {
+              isAuth: false,
+              user: {
+                email: '',
+                image: ''
+              }
+            };
+          }   
         default:
             return state;
     }

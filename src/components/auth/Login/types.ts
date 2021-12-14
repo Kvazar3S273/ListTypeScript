@@ -1,5 +1,7 @@
 export enum AuthActionTypes {
-    LOGIN_AUTH = "LOGIN_AUTH"
+    LOGIN_AUTH = "LOGIN_AUTH",
+    LOGIN_AUTH_ERROR = "LOGIN_AUTH_ERROR",
+    LOGOUT_AUTH = "LOGOUT_AUTH",
 }
 
 export interface ILoginModel {
@@ -28,10 +30,14 @@ export interface AuthState {
     isAuth: boolean
 }
 
-export interface LoginAuthAction {
+export interface LoginUserAction {
     type: AuthActionTypes.LOGIN_AUTH,
     payload: IUser
 }
 
+export interface LogoutUser{
 
-export type AuthAction = LoginAuthAction;
+    type : AuthActionTypes.LOGOUT_AUTH;
+}
+
+export type AuthAction = LoginUserAction | LogoutUser;

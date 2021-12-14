@@ -33,21 +33,23 @@ const RegisterPage = () => {
         <div className="col-md-6 offset-md-3">
           <h1 className="text-center">Реєстрація</h1>
           <form onSubmit={handleSubmit}>
-            {/* <InputGroup
-              label="Пошта"
+            <InputGroup
               value={model.email}
               field="surname"
-              type="email"
               onChange={hadleChange}
+              label="Пошта"
+              type="email"
+              errors={[]}
             />
 
             <InputGroup
-              label="Ім'я"
               value={model.name}
               field="name"
-              type="text"
               onChange={hadleChange}
-            /> */}
+              label="Ім'я"
+              type="text"
+              errors={[]}
+            />
 
             <button type="submit" className="btn btn-primary">
               Реєстрація
