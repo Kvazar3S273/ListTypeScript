@@ -1,64 +1,120 @@
-import React, { useState } from "react";
-import InputGroup from "../../common/InputGroup";
-// import {useActions} from '../../../hooks/useActions';
-import {IRegisterModel} from './types';
+import { useNavigate } from 'react-router';
+import { useActions } from '../../../hooks/useActions';
+import { Form, FormikHelpers, FormikProvider, useFormik } from "formik";
+import { useState } from "react";
+import { IRegisterModel, IRegisterErrorResponse } from './types';
+import { LoginValidationSchema } from './validation';
+import TextInput from '../../common/TextInput';
+import ImageInput from '../../common/ImageInput';
 
+const Register = () => {
 
+    const navigator = useNavigate();
+    const { RegisterUser } = useActions();
 
-const RegisterPage = () => {
+    const initialValues: IRegisterModel = {
+        name: '',
+        email: '',
+        Image: null,
+        password: '',
+        password_confirm: ''
+    };
 
-  // const {registerUser} = useActions();
+    const onHandlerSubmit = async (values: IRegisterModel, { setFieldError }: FormikHelpers<IRegisterModel>) => {
 
-  const [model, setModel] = useState<IRegisterModel>({
-    name: "",
-    email: "",
-  } as IRegisterModel);
+        const formData = new FormData();
+        Object.entries(values).forEach(([key, value]) => formData.append(key, value));
+        console.log("Values:",values);
+        try {
+            await RegisterUser(formData);
+            navigator("/");
+        }
+        catch (errors) {
+            const serverErrors = errors as IRegisterErrorResponse;
+            const { name, email, password, password_confirm } = serverErrors;
+            Object.entries(serverErrors).forEach(([key, value])=> {
+                if(Array.isArray(value))
+                {
+                    let message = "";
+                    value.forEach((item)=> { message+=`${item} `; });
+                    //setFieldError(key, message);
+                    console.log(key, message);
+                }
+            });
+           
+        }
 
-  const hadleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setModel({
-      ...model,
-      [e.target.name]: e.target.value,
+    }
+
+    const fileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if ((e.target as HTMLInputElement).files) {
+            setFieldValue("Image", e.target.files?.item(0));
+        }
+    };
+
+    const formik = useFormik({
+        initialValues: initialValues,
+        validationSchema: LoginValidationSchema,
+        onSubmit: onHandlerSubmit
     });
-  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // registerUser(model);
-    console.log("submit data", model);
-  };
+    const { errors, touched, handleChange, handleSubmit, setFieldValue,setFieldError } = formik;
 
-  return (
-    <>
-      <div className="row">
-        <div className="col-md-6 offset-md-3">
-          <h1 className="text-center">Реєстрація</h1>
-          <form onSubmit={handleSubmit}>
-            <InputGroup
-              value={model.email}
-              field="surname"
-              onChange={hadleChange}
-              label="Пошта"
-              type="email"
-              errors={[]}
-            />
+    return (
+        <div className="container">
+            <div className="row">
+                <div className="offset-3 col-md-6">
+                    <h1 className="text-center">Реєстрація</h1>
 
-            <InputGroup
-              value={model.name}
-              field="name"
-              onChange={hadleChange}
-              label="Ім'я"
-              type="text"
-              errors={[]}
-            />
+                    <FormikProvider value={formik}>
+                        <Form onSubmit={handleSubmit}>
+                            <TextInput
+                                label="Ім'я"
+                                field="name"
+                                onChange={handleChange}
+                                error={errors.name}
+                                touched={touched.name}
+                                type="text"
+                            />
+                            <TextInput
+                                label="Електронна пошта"
+                                field="email"
+                                onChange={handleChange}
+                                error={errors.email}
+                                touched={touched.email}
+                                type="text"
+                            />
+                            <TextInput
+                                label="Пароль"
+                                field="password"
+                                onChange={handleChange}
+                                error={errors.password}
+                                touched={touched.password}
+                                type="password"
+                            />
+                            <TextInput
+                                label="Підтвердження пароля"
+                                field="password_confirm"
+                                onChange={handleChange}
+                                error={errors.password_confirm}
+                                touched={touched.password_confirm}
+                                type="password"
+                            />
+                            <ImageInput
+                                label="Фото"
+                                field="Image"
+                                onChange={fileChange}
+                                error={errors.Image}
+                                touched={touched.Image}
+                                type="file"
+                            />
 
-            <button type="submit" className="btn btn-primary">
-              Реєстрація
-            </button>
-          </form>
-        </div>
-      </div>
-    </>
-  );
-};
+                            <input type="submit" className="btn btn-success mt-4" value="Зареєструватися" />
+                        </Form>
+                    </FormikProvider>
+                </div>
+            </div>
+        </div>);
+}
 
-export default RegisterPage;
+export default Register;

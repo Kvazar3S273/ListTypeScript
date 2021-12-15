@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTypedSelector } from "../../../hooks/useTypedSelector";
-import { AuthUser } from "../../auth/Login/action";
+import { AuthUserData } from "../../auth/Login/action";
 
 const Header = () => {
   const { isAuth, user } = useTypedSelector((redux) => redux.auth);

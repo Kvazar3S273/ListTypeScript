@@ -13,20 +13,11 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<DefaultLayout />}>
+        <Route path="/" element={<DefaultLayout/>}>
           <Route index element={< HomePage />} />
-          <Route path="login" element={<LoginPage />} />
+          <Route path="login" element={< LoginPage/>} />   
           <Route path="register" element={<RegisterPage />} />
-
-
-          <Route path="/list" element={<ProductList />} />
-          <Route path="*" element={<NoMatch />} />
         </Route>
-        <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<RegisterPage />} />
-
-            <Route path="*" element={<NoMatch />} />
-          </Route>
       </Routes>
     </BrowserRouter>
   );

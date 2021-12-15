@@ -1,112 +1,92 @@
-import { useState, useRef } from "react";
-import { useNavigate } from 'react-router';
-import InputGroupFormik from "../../common/InputGroupFormik";
-import { ILoginModel, LoginError } from "./types";
-import { useActions } from "../../../hooks/useActions";
-import { Formik, Form, FormikProps } from "formik";
-import { validationFields } from "./validation";
+import { Form, FormikProvider, useFormik, FormikHelpers } from "formik";
+import React, { useState } from 'react';
+import { ILoginModel, ILoginServerError } from './types';
+import { LoginSchema } from './validation';
+import { InputGroup } from "../../common/InputGroup";
+import { useActions } from '../../../hooks/useActions';
+import { useNavigate } from "react-router";
 
+const Login: React.FC = () => {
 
-const LoginPage = () => {
-  const { LoginUser } = useActions();
-  const navigator = useNavigate();
+    const { LoginCurrentUser } = useActions();
+    const navigator = useNavigate();
 
-  const refFormik = useRef<FormikProps<ILoginModel>>(null);
+    const initialValues: ILoginModel = {
+        email: "",
+        password: ""
+    };
+    const [errordata, setErrordata] = useState<string>("");
 
-  const initialState: ILoginModel = {
-    email: "",
-    password: "",
-  };
+    const onSubmitHandler = async (values: ILoginModel, { setFieldError }: FormikHelpers<ILoginModel>) => {
+        console.log("Data to server:", values);
+        try {
 
-  const [invalid, setInvalid] = useState<string>("");
+            await LoginCurrentUser(values);
+            navigator("/");
 
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-
-  // const handleSubmit = async (e: React.FormEvent) => {
-  const handleSubmit = async (values: ILoginModel) => {
-    setIsSubmitted(true);
-
-    try {
-      console.log("Login begin");
-      await LoginUser(values);
-      console.log("Login end");
-      navigator("/");
-      setIsSubmitted(false);
-    } 
-    catch (ex) {
-      const serverErrors = ex as LoginError;
-      Object.entries(serverErrors).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          let message = "";
-          value.forEach((item) => {
-            message += `${item} `;
-          });
-          refFormik.current?.setFieldError(key, message);
         }
-      });
-      
-      if(serverErrors.error)
-      {
-        setInvalid(serverErrors.error);
-      }
-      setIsSubmitted(false);
-    }
-  };
+        catch (ex) {
+            const serverErrors = ex as ILoginServerError;
+            Object.entries(serverErrors).forEach(([key, value]) => {
+                if (Array.isArray(value)) {
+                    let message = "";
+                    value.forEach((item) => {
+                        message += `${item} `;
+                        setFieldError(key, message);
+                    });
 
-  return (
-    <div className="row">
-      <div className="col-md-6 offset-md-3">
-        <h1 className="text-center">Вхід</h1>
-        {invalid && <div className="alert alert-danger">{invalid}</div>}
-        <Formik
-          innerRef={refFormik}
-          initialValues={initialState}
-          validationSchema={validationFields}
-          onSubmit={handleSubmit}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-            /* and other goodies */
-          }) => (
-            <form onSubmit={handleSubmit}>
-              <InputGroupFormik
-                label="Пошта"
-                error={errors.email}
-                onChange={handleChange}
-                type="email"
-                field="email"
-                touched={touched.email}
-                value={values.email}
-              />
+                }
+            });
+            if (serverErrors.error) {
+                setErrordata(serverErrors.error);
+            }
+        }
+    };
 
-              <InputGroupFormik
-                label="Пароль"
-                error={errors.password}
-                onChange={handleChange}
-                type="password"
-                field="password"
-                touched={touched.password}
-                value={values.password}
-              />
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="btn btn-primary"
-              >
-                Вхід
-              </button>
-            </form>
-          )}
-        </Formik>
-      </div>
-    </div>
-  );
-};
 
-export default LoginPage;
+    const formik = useFormik(
+        {
+            initialValues: initialValues,
+            validationSchema: LoginSchema,
+            onSubmit: onSubmitHandler
+        }
+    );
+
+    const { errors, touched, handleChange, handleSubmit } = formik;
+
+    return (
+        <div className="row">
+            <div className="col-md-6 offset-md-3">
+                <h1>Login page</h1>
+                <FormikProvider value={formik}>
+                    {errordata && <div className="alert alert-danger">{errordata}</div>}
+                    <Form onSubmit={handleSubmit}>
+                        <InputGroup
+                            field="email"
+                            label="Email"
+                            error={errors.email}
+                            touched={touched.email}
+                            onChange={handleChange}
+                        />
+
+                        <InputGroup
+                            field="password"
+                            label="Password"
+                            type="password"
+                            touched={touched.password}
+                            error={errors.password}
+                            onChange={handleChange}
+                        />
+
+                        <button type="submit" className="btn btn-danger">
+                            Log in
+                        </button>
+                    </Form>
+                </FormikProvider>
+            </div>
+        </div>
+    )
+
+}
+
+export default Login;

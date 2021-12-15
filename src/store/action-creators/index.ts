@@ -1,5 +1,9 @@
-import * as AuthActionCreators from '../../components/auth/Login/action';
+import * as UserActions from '../../components/auth/Login/action';
+import * as RegisterActions from '../../components/auth/Register/action';
 
-export default {
-    ...AuthActionCreators
+const actions = {
+    ...UserActions,
+    ...RegisterActions
 }
+
+export default actions;
