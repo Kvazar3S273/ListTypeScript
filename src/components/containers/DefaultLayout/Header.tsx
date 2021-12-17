@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { useTypedSelector } from "../../../hooks/useTypedSelector";
 import { AuthUserData } from "../../auth/Login/action";
+import { useActions } from "../../../hooks/useActions";
 
 const Header = () => {
   const { isAuth, user } = useTypedSelector((redux) => redux.auth);
-
+  const {LogoutUser}=useActions();
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
@@ -29,10 +30,11 @@ const Header = () => {
                 Головна
               </Link>
             </li>
+
             <li className="nav-item">
-              <Link className="nav-link" to="/list">
-                Продукти
-              </Link>
+            <a className="nav-link active" aria-current="page" href="/products">Продукти</a>
+                
+              
             </li>
           </ul>
           {isAuth ? (
@@ -45,7 +47,7 @@ const Header = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/logout">
+                <Link className="nav-link" to="/" onClick={LogoutUser}>
                   Вихід
                 </Link>
               </li>

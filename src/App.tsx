@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from './components/Home';
-import ProductList from './components/ProductList';
+import ProductsListPage from './components/products/List';
 import LoginPage from './components/auth/Login';
 import RegisterPage from './components/auth/Register';
 import DefaultLayout from './components/containers/DefaultLayout';
@@ -17,6 +17,7 @@ function App() {
           <Route index element={< HomePage />} />
           <Route path="login" element={< LoginPage/>} />   
           <Route path="register" element={<RegisterPage />} />
+          <Route path="products" element={<ProductsListPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
