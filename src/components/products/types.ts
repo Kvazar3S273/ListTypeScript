@@ -22,6 +22,7 @@ export interface IProductsResponse {
 export interface ISearchProduct {
     page: number|string
     name?: null|string
+    detail?: null|string
 }
 
 //Стейт для редусера

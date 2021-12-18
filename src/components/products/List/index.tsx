@@ -14,6 +14,7 @@ const ProductsListPage: React.FC = () => {
   const { fetchProducts } = useActions();
 
   const [name, setName] = useState<string>("");
+  //const [detail, setDetail] = useState<string>("");
   const navigator = useNavigate();
   const [query, setQuery] = useState<string>(window.location.search);
 
@@ -30,44 +31,74 @@ const ProductsListPage: React.FC = () => {
   useEffect(() => {
     const params = new URLSearchParams(query);
     const name = params?.get("name") ?? "";
+    const det = params?.get("detail") ?? "";
     setName(name);
+    //setDetails(details);
     const search: ISearchProduct = {
       page: params?.get("page") ?? 1,
       name: name,
+      detail: det,
     };
     getProducts(search);
   }, [query]);
 
-  const pages = [];
+  //const pages = [];
+  var pages: Array<number> = new Array(last_page);
   for (let i = 1; i <= last_page; i++) {
     pages.push(i);
   }
 
   const onHandleSubmit = (e: any) => {
     e.preventDefault();
-    const name = (document.getElementById("search") as HTMLInputElement).value;
-    console.log("search", name);
-    setQuery("?name=" + name);
-    navigator("?name=" + name);
-  };
+    const name = (document.getElementById("searchName") as HTMLInputElement).value;
+    const det = (document.getElementById("searchDetail") as HTMLInputElement).value;
+    
+    if(name||name.length>0)
+    {
+      setQuery("?name=" + name);
+      navigator("?name=" + name);
+      console.log("search", name);
+    }
+    if(det||det.length>0)
+    {
+      setQuery("?detail=" + det);
+      navigator("?detail=" + det);
+      console.log("search", det);
+    }
 
+  };
   return (
     <>
       <h1 className="text-center">Товари</h1>
+
       <form className="d-flex" onSubmit={onHandleSubmit}>
-        <input
-          className="form-control me-2"
-          id="search"
+      <div>
+      <input
+          className="form-control me-auto"
+          id="searchName"
           type="search"
           placeholder="Search"
           aria-label="Search"
         />
         <button className="btn btn-outline-success" type="submit">
-          Search
+          По імені
         </button>
+      </div>
+      <div>
+      <input
+          className="form-control me-auto"
+          id="searchDetail"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+        />
+        <button className="btn btn-outline-success" type="submit">
+          По опису
+        </button>
+      </div>
       </form>
 
-      {loading && <h2>Loading ...</h2>}
+      {loading && <h2 className="text-center" >Loading ...</h2>}
 
       <table className="table">
         <thead>
